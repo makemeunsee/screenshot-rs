@@ -456,12 +456,12 @@ mod ffi {
                 monitor.width as usize * pixel_width,
             );
 
-            // let data = flip_rgb(
-            //     data,
-            //     monitor.height as usize,
-            //     monitor.width as usize,
-            //     pixel_width as usize,
-            // );
+            let data = flip_rgb(
+                data,
+                monitor.height as usize,
+                monitor.width as usize,
+                pixel_width as usize,
+            );
 
             shellscalingapi::SetProcessDpiAwareness(dpi_awareness);
 

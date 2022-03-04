@@ -17,6 +17,7 @@ extern crate libc;
 extern crate winapi;
 
 pub use ffi::get_screenshot;
+pub use ffi::get_screenshot_area;
 use std::mem::size_of;
 
 #[derive(Clone, Copy)]
@@ -124,6 +125,10 @@ mod ffi {
     use {ScreenResult, Screenshot};
 
     pub fn get_screenshot(screen: u32) -> ScreenResult {
+        get_screenshot_area(screen, 0, 0, std::u32::MAX, std::u32::MAX)
+    }
+
+    pub fn get_screenshot_area(screen: u32, x: u32, y: u32, w: u32, h: u32) -> ScreenResult {
         unsafe {
             let display = XOpenDisplay(null_mut());
             let screen = XScreenOfDisplay(display, screen as c_int);
@@ -136,10 +141,10 @@ mod ffi {
             let img = &mut *XGetImage(
                 display,
                 root,
-                0,
-                0,
-                attr.width as c_uint,
-                attr.height as c_uint,
+                std::cmp::min(std::cmp::max(0, x) as c_int, attr.width),
+                std::cmp::min(std::cmp::max(0, y as c_int), attr.height),
+                std::cmp::min(std::cmp::max(0, w), attr.width as c_uint),
+                std::cmp::min(std::cmp::max(0, h), attr.height as c_uint),
                 XAllPlanes(),
                 ZPixmap,
             );
@@ -451,12 +456,12 @@ mod ffi {
                 monitor.width as usize * pixel_width,
             );
 
-            let data = flip_rgb(
-                data,
-                monitor.height as usize,
-                monitor.width as usize,
-                pixel_width as usize,
-            );
+            // let data = flip_rgb(
+            //     data,
+            //     monitor.height as usize,
+            //     monitor.width as usize,
+            //     pixel_width as usize,
+            // );
 
             shellscalingapi::SetProcessDpiAwareness(dpi_awareness);
 

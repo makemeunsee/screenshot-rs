@@ -3,10 +3,10 @@ extern crate image;
 extern crate screenshot;
 
 use bmp::{Image, Pixel};
-use screenshot::get_screenshot;
+use screenshot::get_screenshot_area;
 
 fn main() {
-    let s = get_screenshot(0).unwrap();
+    let s = get_screenshot_area(0, 100, 100, 1000, 1000).unwrap();
 
     println!(
         "{} x {} x {} = {} bytes",

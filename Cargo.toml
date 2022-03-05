@@ -25,5 +25,5 @@ features = ["windef", "ntdef", "minwindef", "wingdi", "winuser",
          "shellscalingapi"]
 
 [dev-dependencies]
-bmp = "0.4"
-image = "0.21"
+bmp = "0.5"
+image = "0.24"

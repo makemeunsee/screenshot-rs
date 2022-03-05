@@ -52,7 +52,7 @@ fn main() {
         s.as_ref(),
         s.width() as u32,
         s.height() as u32,
-        image::RGBA(8),
+        image::ColorType::Rgba8,
     )
     .unwrap();
 }

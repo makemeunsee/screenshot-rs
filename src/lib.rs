@@ -138,16 +138,12 @@ mod ffi {
             XGetWindowAttributes(display, root, attr.as_mut_ptr());
             let attr = attr.assume_init();
 
-            let img = &mut *XGetImage(
-                display,
-                root,
-                std::cmp::min(std::cmp::max(0, x) as c_int, attr.width),
-                std::cmp::min(std::cmp::max(0, y as c_int), attr.height),
-                std::cmp::min(std::cmp::max(0, w), attr.width as c_uint),
-                std::cmp::min(std::cmp::max(0, h), attr.height as c_uint),
-                XAllPlanes(),
-                ZPixmap,
-            );
+            let x = std::cmp::min(std::cmp::max(0, x) as c_int, attr.width - 1);
+            let y = std::cmp::min(std::cmp::max(0, y as c_int), attr.height - 1);
+            let w = std::cmp::min(std::cmp::max(1, w), (attr.width - x) as c_uint);
+            let h = std::cmp::min(std::cmp::max(1, h), (attr.height - y) as c_uint);
+
+            let img = &mut *XGetImage(display, root, x, y, w, h, XAllPlanes(), ZPixmap);
             XDestroyWindow(display, root);
             XCloseDisplay(display);
             // This is the function which XDestroyImage macro calls.
